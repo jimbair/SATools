@@ -4,6 +4,8 @@
 # echo "`df / | tail -n1 | awk '{print $4}'` / (`df / | tail -n1 | awk '{print $4}' ; sleep 60` - `df /| tail -n1 | awk '{print $4}'`)" | bc
 
 # How many seconds to sleep between df pools
+# The more time you can use here, the more stable your sample will be.
+# 300 seconds (5 mins) is best.
 sleepTime='60'
 
 # If given a single arg, use that as our mount point

@@ -25,7 +25,7 @@ fi
 # Used to poll df for available blocks
 mountAvailable() {
 
-    df ${ourMount} | tail -n1 | awk '{print $4}'
+    df ${ourMount} | tail -n1 | awk '{print $4}' | sed '/[^0-9]/d'
 
 }
 

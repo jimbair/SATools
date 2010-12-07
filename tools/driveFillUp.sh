@@ -6,20 +6,64 @@
 # How many seconds to sleep between df pools
 # The more time you can use here, the more stable your sample will be.
 # 300 seconds (5 mins) is best.
-sleepTime='60'
 
-# If given a single arg, use that as our mount point
-if [ "$#" -eq '1' ]; then
-    ourMount="${1}"
-elif [ "$#" -eq '0' ]; then
-    ourMount='/'
-else
-    echo "Usage: $(basename $0) [OPTION]" >&2
-    echo "" >&2
-    echo "Options:" >&2
-    echo "Mount point ('/' used by default if none given)" >&2
+# Helpful usage function
+usage() {
+    echo "Usage: $(basename $0) [OPTION]"
+    echo ""
+    echo "Options:"
+    echo "--path=/path/to/filesystem ('/' used by default)"
+    echo "--seconds=N Seconds to wait ('300' used by default)"
     exit 1
-fi
+}
+
+# Handle our args
+while [ $# -gt 0 ]; do
+
+    # Make sure we got a valid argument like --seconds=10
+    arg="$(echo $1 | grep '\-\-' | grep '=')"
+    if [ -z "${arg}" ]; then
+        echo "Invalid Argument: '$1'" >&2
+        usage >&2
+        exit 1
+    fi
+    
+    # Figure out which option was passed
+    opt="$(echo $1 | cut -d '=' -f -1)"
+    if [ -z "${opt}" ]; then
+        echo "Invalid Argument: '$1'" >&2
+        usage >&2
+        exit 1
+    fi
+    
+    # Setup our variables
+    if [ "${opt}" == '--seconds' ]; then
+        sleepTime="$(echo ${arg} | cut -d '=' -f 2- | sed '/[^0-9]/d')"
+        if [ -z "${sleepTime}" ]; then
+            echo "Invalid number of seconds: '${arg}'"
+            usage >&2
+            exit 1
+        fi
+    elif [ "${opt}" == '--path' ]; then
+        ourMount="$(echo ${arg} | cut -d '=' -f 2-)"
+        if [ -z "${ourMount}" ]; then
+            echo "Invalid path given: '${arg}'"
+            usage >&2
+            exit 1
+        fi
+    else
+        echo "Unknown option: '${opt}'" >&2
+        usage >&2
+        exit 1
+    fi
+
+    shift
+
+done
+
+# Fill in defaults if needed.
+[ -z "${sleepTime}" ] && sleepTime='300'
+[ -z "${ourMount}" ] && ourMount='/'
 
 
 # Used to poll df for available blocks

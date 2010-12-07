@@ -9,7 +9,7 @@
 
 # Helpful usage function
 usage() {
-    echo "Usage: $(basename $0) [OPTION]"
+    echo "Usage: $(basename $0) [OPTIONS]"
     echo ""
     echo "Options:"
     echo "--path=/path/to/filesystem ('/' used by default)"

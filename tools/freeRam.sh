@@ -4,9 +4,7 @@
 # Still need to validate.
 
 total="$(free -m | grep 'Mem:' | awk '{print $2}')"
-free="$(free -m | grep 'Mem:' | awk '{print $4}')"
-cached="$(free -m | grep 'buffers/cache' | awk '{print $NF}')"
-free="$((${free}+${cached}))"
+free="$(free -m | grep 'buffers/cache' | awk '{print $NF}')"
 diff="$((${total}-${free}))"
 result="$(echo "scale=2; ${diff}/${total}" | bc | cut -d '.' -f 2- | tr -d '\n'; echo %)"
 

@@ -77,24 +77,26 @@ mountAvailable() {
 # MAIN #
 ########
 
-echo -n "Getting first number of available blocks for ${ourMount}..."
+echo -n "Getting first number of available blocks for '${ourMount}'..."
 firstMount="$(mountAvailable)"
 if [ -z "${firstMount}" ]; then
     echo 'failed.' >&2
     exit 1
 fi
 echo 'done.'
+echo "Number of available blocks: ${firstMount}"
 
 echo "Sleeping for ${sleepTime} seconds."
 sleep ${sleepTime}
 
-echo -n "Getting second number of available blocks for ${ourMount}..."
+echo -n "Getting second number of available blocks for '${ourMount}'..."
 secondMount="$(mountAvailable)"
 if [ -z "${secondMount}" ]; then
     echo 'failed.' >&2
     exit 1
 fi
 echo 'done.'
+echo "Number of available blocks: ${secondMount}"
 
 # Build string
 string="${firstMount} / ( ${firstMount} - ${secondMount} )"
